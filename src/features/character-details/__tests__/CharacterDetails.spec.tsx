@@ -41,12 +41,12 @@ describe("CharacterDetails", () => {
     });
   });
 
-  // it("Displays loading state when fetching data", async () => {
-  //   renderWithProvider(<CharacterDetails />, []);
-  //   await waitFor(() => {
-  //     expect(await screen.findByTestId("loading-indicator")).toBeTruthy();
-  //   });
-  // });
+  it("Displays loading state when fetching data", async () => {
+    renderWithProvider(<CharacterDetails />, []);
+    await waitFor(() => {
+      expect(screen.getByTestId("loading-indicator")).toBeTruthy();
+    });
+  });
 
   it("Displays Error state when its Error ", async () => {
     renderWithProvider(<CharacterDetails />, characterDetailsErrorMock);

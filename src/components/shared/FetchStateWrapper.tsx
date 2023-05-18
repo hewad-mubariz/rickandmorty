@@ -10,7 +10,7 @@ interface Props {
 const FetchStateWrapper: React.FC<Props> = ({ loading, error, loadingType = "fullscreen", children }) => {
   if (loading && loadingType === "fullscreen") {
     return (
-      <View style={styles.fullscreenLoading} testID={"loading-indicator"}>
+      <View style={styles.fullscreenLoading}>
         <ActivityIndicator testID="loading-indicator" size="large" color="white" />
       </View>
     );
