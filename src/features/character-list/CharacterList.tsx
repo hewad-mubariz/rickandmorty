@@ -16,6 +16,8 @@ export const CharacterList = () => {
   const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigation = useNavigation<CharacterDetailScreenNavigationProp>();
+
+  //adding some delay to searach
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   const { loading, error, data, fetchMore, refetch } = useGetCharactersQuery({
@@ -31,6 +33,8 @@ export const CharacterList = () => {
 
   const loadMoreCharacters = () => {
     setLoadingMore(true);
+
+    //Result will be merged using using field policy in client.ts
     fetchMore({
       variables: {
         page: page + 1,

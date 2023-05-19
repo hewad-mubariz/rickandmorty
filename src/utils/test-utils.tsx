@@ -4,6 +4,7 @@ import { MockedProvider, MockedResponse } from "@apollo/client/testing";
 import { NavigationContainer } from "@react-navigation/native";
 import { DocumentNode, OperationVariables, useQuery } from "@apollo/client";
 
+//render With component
 const renderWithProvider = (component: JSX.Element, mocks: MockedResponse[] = []) => {
   const wrapper = ({ children }: React.PropsWithChildren<{}>) => (
     <MockedProvider mocks={mocks} addTypename={false}>
@@ -14,7 +15,7 @@ const renderWithProvider = (component: JSX.Element, mocks: MockedResponse[] = []
   return render(component, { wrapper });
 };
 
-
+//see query result
 const useQueryWithProvider = <TData = any, TVariables = OperationVariables>(
   mocks: MockedResponse[] = [],
   query: DocumentNode,
