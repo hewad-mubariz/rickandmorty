@@ -1,9 +1,13 @@
 import * as React from "react";
-import { cleanup, fireEvent, screen, waitFor } from "@testing-library/react-native";
+import { act, cleanup, fireEvent, screen, waitFor, within } from "@testing-library/react-native";
 import { GetCharactersDocument } from "../../../../generated/graphql";
 import { CharacterList } from "../CharacterList";
 import { renderWithProvider, useQueryWithProvider } from "../../../utils/test-utils";
-import { allCharactersErrorMock, allCharactersMock } from "../../../../__mocks__/query-mocks/characterQueriesMocks";
+import {
+  allCharactersErrorMock,
+  allCharactersFilterMock,
+  allCharactersMock,
+} from "../../../../__mocks__/query-mocks/characterQueriesMocks";
 import { allCharactersData } from "../../../../__mocks__/data/characterMockedData";
 const mockedNavigate = jest.fn();
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
@@ -67,5 +71,18 @@ describe("CharacterList", () => {
     fireEvent(toPress, "press");
     expect(mockedNavigate).toHaveBeenCalledTimes(1);
     expect(mockedNavigate).toHaveBeenCalledWith("CharacterDetails", { characterId: "1" });
+  });
+  it("Filters data Correctly", async () => {
+    renderWithProvider(<CharacterList />, [...allCharactersMock, ...allCharactersFilterMock]);
+
+    const searchField = await screen.findByTestId("searchField");
+
+    await act(async () => {
+      fireEvent.changeText(searchField, "Rick");
+    });
+
+    // Wait for the component to update and assert
+    const listItem = screen.getByTestId("character-item1");
+    expect(within(listItem).getByText("Rick Sanchez")).toBeTruthy();
   });
 });

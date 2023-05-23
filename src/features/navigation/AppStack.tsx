@@ -13,7 +13,7 @@ const Stack = createStackNavigator<AppStackParamsList>();
 
 export const AppStack: React.FC = () => {
   return (
-    <Stack.Navigator initialRouteName="CharacterList" i>
+    <Stack.Navigator initialRouteName="CharacterList">
       <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="CharacterList" component={CharacterList} />
         <Stack.Screen name="CharacterDetails" component={CharacterDetails} />

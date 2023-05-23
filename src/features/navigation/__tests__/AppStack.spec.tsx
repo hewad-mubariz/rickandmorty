@@ -1,20 +1,18 @@
 import React from "react";
-import { cleanup, render } from "@testing-library/react-native";
-import { NavigationContainer } from "@react-navigation/native";
+import { cleanup, screen, waitFor } from "@testing-library/react-native";
 import { AppStack } from "../AppStack";
-import { MockedProvider } from "@apollo/client/testing";
-import { allCharactersMock } from "../../../../__mocks__/query-mocks/characterQueriesMocks";
 import { renderWithProvider } from "../../../utils/test-utils";
-allCharactersMock;
+import { allCharactersMock } from "../../../../__mocks__/query-mocks/characterQueriesMocks";
 // We are using React Native >= 0.64
 jest.mock("react-native/Libraries/Animated/NativeAnimatedHelper");
 
 describe("AppStack", () => {
-  afterAll(() => {
+  afterEach(() => {
     cleanup();
+    jest.clearAllMocks();
   });
-  it("Checks if navigation renders correct", async () => {
-    //todo remove warning for act
-    renderWithProvider(<AppStack />, []);
+  it("Checks if navigation renders Correctly", async () => {
+    renderWithProvider(<AppStack />, allCharactersMock);
+    await waitFor(() => expect(screen.getByTestId("character-list")).toBeTruthy());
   });
 });

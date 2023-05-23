@@ -20,7 +20,7 @@ export const allCharactersFilterMock: MockedResponse[] = [
   {
     request: {
       query: GetCharactersDocument,
-      variables: { page: 1, name: "Rick Sanchez" },
+      variables: { page: 1, name: "Rick" },
     },
     result: {
       data: filteredCharactersData,
