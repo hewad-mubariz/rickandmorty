@@ -1,5 +1,6 @@
 query GetCharacterDetails($id: ID!) {
   character(id: $id) {
+    id
     name
     image
     species
