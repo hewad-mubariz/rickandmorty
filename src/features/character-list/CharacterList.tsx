@@ -8,19 +8,19 @@ import { AppStackParamsList } from "../navigation/AppStack";
 import { StackNavigationProp } from "@react-navigation/stack";
 import CharacterListItem from "./components/ListItem";
 import useDebounce from "../../hooks/useDebounce";
+import { NetworkStatus } from "@apollo/client";
 
 type CharacterDetailScreenNavigationProp = StackNavigationProp<AppStackParamsList, "CharacterDetails">;
 
 export const CharacterList = () => {
   const [page, setPage] = useState(1);
-  const [loadingMore, setLoadingMore] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const navigation = useNavigation<CharacterDetailScreenNavigationProp>();
 
   //adding some delay to searach
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
-  const { loading, error, data, fetchMore, refetch } = useGetCharactersQuery({
+  const { loading, error, data, fetchMore, refetch, networkStatus } = useGetCharactersQuery({
     variables: { page: 1, name: searchTerm },
     notifyOnNetworkStatusChange: true,
   });
@@ -29,12 +29,9 @@ export const CharacterList = () => {
   useEffect(() => {
     setPage(1);
     refetch({ page: 1, name: debouncedSearchTerm });
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm, refetch]);
 
   const loadMoreCharacters = () => {
-    setLoadingMore(true);
-
-    //Result will be merged using using field policy in client.ts
     fetchMore({
       variables: {
         page: page + 1,
@@ -45,7 +42,7 @@ export const CharacterList = () => {
 
   const renderFooter = () => {
     const maxPages = data?.characters?.info?.pages || 1;
-    if (!loadingMore || page >= maxPages) return <Text></Text>;
+    if (networkStatus !== NetworkStatus.fetchMore || page >= maxPages) return null;
     return (
       <View style={styles.footer}>
         <ActivityIndicator size="large" color="white" />
@@ -53,12 +50,13 @@ export const CharacterList = () => {
     );
   };
   const onSearchChange = (text: string) => {
+    console.log(networkStatus);
     setSearchTerm(text);
   };
   const handleCardPress = (id: string) => {
     navigation.navigate("CharacterDetails", { characterId: id });
   };
-  const showLoader = useMemo(() => loading && !loadingMore, [loading]);
+  const showLoader = useMemo(() => loading && networkStatus !== NetworkStatus.fetchMore, [loading, networkStatus]);
   return (
     <FetchStateWrapper loading={showLoader} error={error} loadingType="inline">
       <View style={styles.container} testID={"searchContainer"}>
